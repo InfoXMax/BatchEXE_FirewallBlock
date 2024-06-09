@@ -1,5 +1,5 @@
 
-```markdown
+
 # Block EXE Files in Windows Firewall
 
 This PowerShell script adds firewall rules to block all `.exe` files in a specified folder from accessing the internet. It creates both inbound and outbound rules for each executable file, effectively preventing them from making or receiving network connections.
@@ -41,53 +41,12 @@ The script performs the following actions:
    - An inbound rule to block the executable from accepting inbound connections.
 3. The rules are created with the profile set to `Any`, meaning they apply to all network profiles (Domain, Private, Public).
 
-### Example Script
-
-```powershell
-# Specify the folder containing the .exe files
-$folderPath = "C:\Path\To\Your\Folder"
-
-# Get all .exe files in the specified folder
-$exeFiles = Get-ChildItem -Path $folderPath -Filter *.exe
-
-foreach ($exeFile in $exeFiles) {
-    # Create an outbound rule to block the .exe file
-    New-NetFirewallRule -DisplayName "Block Outbound $($exeFile.Name)" `
-                        -Direction Outbound `
-                        -Action Block `
-                        -Program $exeFile.FullName `
-                        -Profile Any
-
-    # Create an inbound rule to block the .exe file
-    New-NetFirewallRule -DisplayName "Block Inbound $($exeFile.Name)" `
-                        -Direction Inbound `
-                        -Action Block `
-                        -Program $exeFile.FullName `
-                        -Profile Any
-}
-
-Write-Host "Firewall rules have been added for all .exe files in $folderPath."
-```
-
 ## Notes
 
 - Ensure that you have administrative privileges when running the script, as adding firewall rules requires elevated permissions.
 - The script changes the execution policy only for the current session. You can set it back to the default (Restricted) if needed.
 - Test the script in a controlled environment before deploying it widely to avoid unintentional blocking of critical applications.
 
-## Troubleshooting
-
-- **Execution Policy Error**:
-  If you encounter an error related to the execution policy, make sure to set the execution policy as described in the instructions.
-
-  ```powershell
-  Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
-  ```
-
-- **Administrative Privileges**:
-  Ensure you run PowerShell as an administrator to have the necessary permissions to add firewall rules.
-
 ## License
 
 This script is provided as-is, without any warranty or guarantee. Use it at your own risk.
-```
